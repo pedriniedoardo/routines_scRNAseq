@@ -20,6 +20,11 @@ renv::install("stuart-lab/signac")
 renv::install("satijalab/azimuth")
 
 renv::install("tidyverse")
+renv::install("bioc::dittoSeq")
+renv::install("igraph")
+renv::install("bioc::DESeq2")
+renv::install("RNAseqQC")
+renv::install("vegan")
 
 # -------------------------------------------------------------------------
 library(Seurat)
