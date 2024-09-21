@@ -313,6 +313,7 @@ test_short_WOintron/test_short_Wintron
 ggsave("../out/test_introns/plot/Dotplot_markers_before_integration_V5.pdf",width = 13,height = 10)
 
 # based on the expression of the markers gene try to annotate the clusters
+# IMPORTANT: make sure not to lose the rowname in the metadata
 data.list$sample_untreated_WOintron@meta.data <-data.list$sample_untreated_WOintron@meta.data %>%
   mutate(cell_id = case_when(seurat_clusters %in% c(6,2,11,13)~"ASTRO",
                              seurat_clusters %in% c(9,5,10,14,3)~"NEU",
