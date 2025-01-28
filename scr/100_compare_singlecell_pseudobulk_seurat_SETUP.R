@@ -70,7 +70,7 @@ vec_donor_id <- ifnb2@meta.data %>%
 ifnb2$donor_id_fix <- vec_donor_id
 
 # add the donor+stimulation variable
-ifnb2$donor_stim <- paste0(ifnb2$donor_id_fix,"_",ifnb2$stim)
+ifnb2$stim_donor <- paste0(ifnb2$stim,"_",ifnb2$donor_id_fix)
 
 # filter the dataset
 ifnb_final <- subset(ifnb2,subset = donor_id_fix != "unknown")
@@ -144,7 +144,7 @@ sobj_total_h <- sobj_total %>%
   RunHarmony("orig.ident", plot_convergence = TRUE)
 
 sobj_total_h2 <- sobj_total %>%
-  RunHarmony("donor_stim", plot_convergence = TRUE)
+  RunHarmony("stim_donor", plot_convergence = TRUE)
 
 # Downstream analysis -----------------------------------------------------
 # Many downstream analyses are performed on low dimensional embeddings, not gene expression. To use the corrected Harmony embeddings rather than PCs, set reduction = 'harmony'. For example, let's perform the UMAP and Nearest Neighbor analyses using the Harmony embeddings.
