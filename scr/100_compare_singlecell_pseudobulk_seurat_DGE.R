@@ -53,7 +53,76 @@ bulk.mono.de <- FindMarkers(object = pseudo_sobj,
                             test.use = "DESeq2")
 head(bulk.mono.de)
 
-# compare the two methods -------------------------------------------------
+# bulk.mono.de3 <- FindMarkers(object = pseudo_sobj, 
+#                             ident.1 = "CD14 Mono_STIM", 
+#                             ident.2 = "CD14 Mono_CTRL",
+#                             test.use = "MAST")
+
+# -------------------------------------------------------------------------
+# Santo suggests that the prop info from the single cell DE analysis should be added to the pseudobulk analysis result.
+bulk.mono.de2 <- bulk.mono.de %>%
+  # add the genes from the rownames
+  rownames_to_column("gene") %>%
+  # remove the prop from the pbulk
+  select(-c(pct.1,pct.2)) %>%
+  # join the single cell analysis prop
+  left_join(mono.de %>%
+              rownames_to_column("gene") %>%
+              select(gene,pct.1,pct.2),
+            by = c("gene"),
+            # suffix = c(".pBulk",".sc")
+            )
+
+head(bulk.mono.de)
+
+# -------------------------------------------------------------------------
+# sample draft to run the pbulk assessment over all the cell types
+
+# pull all the individual cell types
+cell_id <- pseudo_sobj@meta.data$seurat_annotations %>% unique()
+
+# define the ident for the test
+Idents(pseudo_sobj) <- "celltype.stim"
+
+# loop the test over all the cell_ids fro the STIM vs CTRL comparison (per cell id)
+bulk.mono.de.full <- lapply(cell_id,function(id){
+  # keep tranck fo the processing
+  print(id)
+  
+  # define the ident
+  ident1 <- paste0(id,"_STIM")
+  ident2 <- paste0(id,"_CTRL")
+  
+  # run the test
+  bulk.mono.de <- FindMarkers(object = pseudo_sobj, 
+                              ident.1 = ident1, 
+                              ident.2 = ident2,
+                              test.use = "DESeq2")
+  
+  # add the gene and cell_id to the data.frame
+  bulk.mono.de <- bulk.mono.de %>%
+    rownames_to_column("gene") %>%
+    mutate(cell_id = id)
+  
+  # return the data.frame
+  return(bulk.mono.de)
+}) %>%
+  # make the list as a data.frame
+  bind_rows()
+
+head(bulk.mono.de.full)
+
+# sample plot
+bulk.mono.de.full %>%
+  ggplot(aes(x=avg_log2FC,y=-log(p_val_adj))) +
+  geom_point(shape = 1,alpha=0.4) +
+  facet_wrap(~cell_id) +
+  geom_vline(xintercept = 0,col="red",linetype = "dashed")+
+  theme_bw() +
+  theme(strip.background = element_blank())
+
+
+# compare FC --------------------------------------------------------------
 # merge all the stat per gene
 df_full <- mono.de %>%
   rownames_to_column("gene") %>%
@@ -66,6 +135,9 @@ df_full <- mono.de %>%
 df_full %>%
   ggplot(aes(x=avg_log2FC.sc,y=avg_log2FC.pBulk))+geom_point(shape=1)+theme_bw()+geom_abline(slope = 1,intercept = 0,col="red",linetype = "dashed")
 
+# see the script
+
+# compare p values --------------------------------------------------------
 # compare the estimated adjusted p-value for both analysis
 p_pval <- df_full %>%
   ggplot(aes(x=p_val_adj.sc,y=p_val_adj.pBulk))+geom_point(shape=1) +
@@ -263,5 +335,15 @@ bulk.mono.de_sub <- FindMarkers(object = pseudo_sobj_sub,
                             ident.1 = "CD14 Mono_STIM", 
                             ident.2 = "CD14 Mono_CTRL",
                             test.use = "DESeq2")
+head(bulk.mono.de_sub)
+
+# remove the limit from 3 cells
+# run the DGE over the same cell type for stim vs ctrl. This time the unist are the pseudobulks per donor/celltype/stimulus
+Idents(pseudo_sobj_sub) <- "celltype.stim"
+bulk.mono.de_sub <- FindMarkers(object = pseudo_sobj_sub, 
+                                ident.1 = "CD14 Mono_STIM", 
+                                ident.2 = "CD14 Mono_CTRL",
+                                test.use = "DESeq2",
+                                min.cells.group = 1)
 head(bulk.mono.de_sub)
 
