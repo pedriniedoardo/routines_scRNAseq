@@ -16,6 +16,9 @@ library(UpSetR)
 # read in the dataset -----------------------------------------------------
 sobj <- readRDS("../out/object/100_ifnb_DonorStim.rds")
 
+# check the object version
+class(sobj@assays$RNA)
+
 # test DGE at single cell -------------------------------------------------
 # add in one covariate the cell anntation and the stimulation status
 sobj$celltype.stim <- paste(sobj$seurat_annotations, sobj$stim, sep = "_")
@@ -33,7 +36,11 @@ head(mono.de)
 
 # test DGE at pseudobulk --------------------------------------------------
 # pseudobulk the counts based on donor-condition-celltype
-pseudo_sobj <- AggregateExpression(sobj, assays = "RNA", return.seurat = T, group.by = c("stim", "donor_id", "seurat_annotations"))
+pseudo_sobj <- AggregateExpression(sobj, assays = "RNA", return.seurat = T, group.by = c("stim", "donor_id", "seurat_annotations"),slot = "counts")
+
+# confirm the count slot is correctly populated, notice that the slot contains integers
+pseudo_sobj@assays$RNA$counts
+pseudo_sobj@assays$RNA$data
 
 # add the covariate for the stimulation per cell type
 pseudo_sobj$celltype.stim <- paste(pseudo_sobj$seurat_annotations, pseudo_sobj$stim, sep = "_")
@@ -311,7 +318,7 @@ VlnPlot(sobj, features = top5_sc, idents = c("CD14 Mono_CTRL", "CD14 Mono_STIM")
 # Can I run the pseudobulk routine with just one sample?
 # subset only one sample
 sobj_sub <- subset(sobj,subset = donor_id == "SNG-1015")
-pseudo_sobj_sub <- AggregateExpression(sobj_sub, assays = "RNA", return.seurat = T, group.by = c("stim", "stim_donor", "seurat_annotations"))
+pseudo_sobj_sub <- AggregateExpression(sobj_sub, assays = "RNA", return.seurat = T, group.by = c("stim", "stim_donor", "seurat_annotations"),slot = "counts")
 
 # test DGE sc
 Idents(sobj_sub) <- "celltype.stim"

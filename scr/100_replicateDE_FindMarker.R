@@ -224,7 +224,7 @@ test_log2FC <- data.frame(log2FC = test_avg_expr_1 - test_avg_expr_2)
 
 
 # simulate the pbulk
-seurat_obj_pbulk <- AggregateExpression(seurat_obj, assays = "RNA", return.seurat = T, group.by = c("stim", "sample"))
+seurat_obj_pbulk <- AggregateExpression(seurat_obj, assays = "RNA", return.seurat = T, group.by = c("stim", "sample"),slot="counts")
 
 # 
 test_expr_matrix2 <- seurat_obj_pbulk@assays$RNA$data  # This is log-normalized data (ln counts)
