@@ -29,6 +29,22 @@ clustree::clustree(data.combined@meta.data[,grep("RNA_snn_res",colnames(data.com
                    prefix = "RNA_snn_res.")
 ggsave("../out/test_introns/plot/UMAPCluster_tree_V3.pdf",width = 10,height = 10)
 
+# plot the UMAP with all the resolutions runs
+id_resolution <- str_subset(colnames(data.combined@meta.data),pattern = "RNA_snn_res") %>%
+  sort()
+
+list_plot <- lapply(id_resolution,function(x){
+  plot <- DimPlot(data.combined,
+                  reduction = "umap",
+                  group.by = x,
+                  label = T,
+                  raster = T)
+  return(plot)
+})
+
+wrap_plots(list_plot)
+ggsave("../out/test_introns/plot/UMAPCluster_resolutions_V3.pdf",width = 25,height = 15)
+
 # main umap
 plot03 <- DimPlot(data.combined, reduction = "umap", group.by = "RNA_snn_res.0.5",label = T,raster = T)
 ggsave(plot = plot03,"../out/test_introns/plot/UMAPCluster_harmonySkipIntegration_AllSoupX_01000_06000_15_V3.pdf",width = 6,height = 5)
