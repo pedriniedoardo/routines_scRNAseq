@@ -13,6 +13,8 @@ library(tidyverse)
 options(Seurat.object.assay.version = "v3")
 # in cause of big references increase the amount of RAM per worker
 # options(future.globals.maxSize = 15 * 1000 * 1024^2) # 15 GB
+# print the default number of dimensions for Azimuth
+options()$Azimuth.map.ndims
 
 # processing --------------------------------------------------------------
 # args <- commandArgs(trailingOnly = TRUE)
@@ -24,8 +26,10 @@ DimPlot(ref,group.by = "seurat_clusters",label = T)
 Idents(object = ref) <- "seurat_clusters"
 
 # the object needs to have a model saved, also it needs to have the sct transformed data
-ref_SCT <- SCTransform(ref, method = "glmGamPoi", verbose = T)
-ref2 <- RunUMAP(object = ref_SCT,dims = 1:10, return.model = TRUE)
+ref2 <- SCTransform(ref, method = "glmGamPoi", verbose = T) %>%
+  # it is recommended to have 50 dimensions for a reliable map transfering: options()$Azimuth.map.ndims
+  RunPCA(verbose = T,npcs = 50) %>%
+  RunUMAP(dims = 1:30, return.model = TRUE)
 
 # after SCT the dimensionality reduction is recomputed
 DimPlot(ref2,group.by = "seurat_clusters",label = T)
@@ -69,5 +73,8 @@ saveRDS(object = full.ref, file = file.path("../data/azimuth/ref_BSrun01run02/",
 
 # test reading azimuth reference ------------------------------------------
 # try to load the new reference object created
+
+# if needed reduce the dimensions of the object before loading it
+# options(Azimuth.map.ndims = 30)
 reference <- LoadReference(path = "../data/azimuth/ref_BSrun01run02/")
 DimPlot(reference$plot,group.by = "annotation.l1",label = T)
