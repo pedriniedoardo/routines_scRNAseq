@@ -11,6 +11,8 @@ library(tidyverse)
 # specify the version of Seurat Assay -------------------------------------
 # set seurat compatible with seurat4 workflow
 options(Seurat.object.assay.version = "v3")
+# in cause of big references increase the amount of RAM per worker
+# options(future.globals.maxSize = 15 * 1000 * 1024^2) # 15 GB
 
 # processing --------------------------------------------------------------
 # args <- commandArgs(trailingOnly = TRUE)
@@ -39,6 +41,11 @@ colormap[["annotation.l1"]] <- colormap[["annotation.l1"]][sort(x = names(x = co
 # show the colors
 scales::show_col(colormap$annotation.l1)
 
+# Check the PCA reduction information
+print(full.ref[['pca']])
+num_computed_dims <- ncol(full.ref[['pca']])
+print(paste("Number of computed PC dimensions to set is 1:", num_computed_dims))
+
 # build the object
 ref_final <- AzimuthReference(
   object = full.ref,
@@ -46,6 +53,7 @@ ref_final <- AzimuthReference(
   refDR = "pca",
   refAssay = "SCT",
   metadata = c("annotation.l1"),
+  dims = 1:num_computed_dims,
   # dims = 1:50,
   # k.param = 31,
   colormap = colormap,
