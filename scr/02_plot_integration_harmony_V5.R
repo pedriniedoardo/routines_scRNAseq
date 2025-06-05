@@ -14,6 +14,8 @@ library(RColorBrewer)
 library(SeuratWrappers)
 library(dittoSeq)
 library(clustree)
+library(patchwork)
+library(Nebulosa)
 
 # specify the version of Seurat Assay -------------------------------------
 # set seurat compatible with seurat4 workflow
@@ -147,6 +149,14 @@ plot053 <- data2 %>%
   theme(strip.background = element_blank())
 ggsave(plot = plot053,"../out/test_introns/plot/UMAPnCount_harmonySkipIntegration_AllSoupX_01000_06000_15_V5.pdf",width = 5,height = 4)
 ggsave(plot = plot053,"../out/test_introns/plot/UMAPnCount_harmonySkipIntegration_AllSoupX_01000_06000_15_V5.png",width = 5,height = 4,bg="white")
+
+# plot densities using the nubulosa package
+# deafult plotting the metadata
+# plot_density(data.combined,reduction = "umap",features = "percent.ribo")
+# default ploting genes
+# plot_density(data.combined,reduction = "umap",features = c("GFAP","RORB","CD38"))
+# plot changing the color palette
+plot_density(data.combined,reduction = "umap",features = "percent.ribo")+ggplot2::scale_color_viridis_c(option = "turbo")
 
 # split by sample
 plot06 <- data2 %>%
