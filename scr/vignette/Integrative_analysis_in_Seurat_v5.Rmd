@@ -1,0 +1,68 @@
+---
+title: "Integrative analysis in Seurat v5"
+author: "ep"
+date: "2025-03-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  tidy = 'styler',
+  fig.width = 8,
+  message = FALSE,
+  warning = FALSE,
+  time_it = TRUE,
+  error = TRUE
+)
+```
+
+## REF
+
+<https://satijalab.org/seurat/articles/seurat5_integration>
+
+## Load the libraries
+
+```{r, include=T}
+library(Seurat)
+library(SeuratData)
+library(SeuratWrappers)
+library(Azimuth)
+library(ggplot2)
+library(patchwork)
+
+options(future.globals.maxSize = 1e9)
+# set seurat compatible with seurat4 workflow
+options(Seurat.object.assay.version = "v5")
+```
+
+## Introduction
+
+Integration of single-cell sequencing datasets, for example across experimental batches, donors, or conditions, is often an important step in scRNA-seq workflows. Integrative analysis can help to match shared cell types and states across datasets, which can boost statistical power, and most importantly, facilitate accurate comparative analysis across datasets. In previous versions of Seurat we introduced methods for integrative analysis, including our ‘anchor-based’ integration workflow. Many labs have also published powerful and pioneering methods, including [Harmony](https://github.com/immunogenomics/harmony) and [scVI](https://yoseflab.github.io/software/scvi-tools/), for integrative analysis. We recognize that while the goal of matching shared cell types across datasets may be important for many problems, users may also be concerned about which method to use, or that integration could result in a loss of biological resolution. In Seurat v5, we introduce more flexible and streamlined infrastructure to run different integration algorithms with a single line of code. This makes it easier to explore the results of different integration methods, and to compare these results to a workflow that excludes integration steps. For this vignette, we use a [dataset of human PBMC profiled with seven different technologies](https://www.nature.com/articles/s41587-020-0465-8), profiled as part of a systematic comparative analysis (`pbmcsca`). The data is available as part of our [SeuratData](https://github.com/satijalab/seurat-data) package.
+
+## Layers in the Seurat v5 object
+
+Seurat v5 assays store data in layers. These layers can store raw, un-normalized counts (`layer='counts'`), normalized data (`layer='data'`), or z-scored/variance-stabilized data (`layer='scale.data'`). We can load in the data, remove low-quality cells, and obtain predicted cell annotations (which will be useful for assessing integration later), using our [Azimuth pipeline](https://satijalab.github.io/azimuth/articles/run_azimuth_tutorial.html).
+
+```{r}
+# install the tutorial dataset
+# InstallData("pbmcref")
+# InstallData("pbmcsca")
+
+# load in the pbmc systematic comparative analysis dataset
+obj <- LoadData("pbmcsca")
+
+# soft filtering
+obj  <- subset(obj, nFeature_RNA > 1000)
+head(obj@meta.data)
+
+```
+
+```{r }
+# run the annotation using Azimuth
+obj <- RunAzimuth(obj, reference = "pbmcref")
+
+# currently, the object has two layers in the RNA assay: counts, and data
+# notice that after running Azimuth, the object will have a new annotation attached
+obj
+head(obj@meta.data)
+```

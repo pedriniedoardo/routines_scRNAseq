@@ -339,6 +339,87 @@ p22 <- DimPlot(object = data.list$sample_untreated_Wintron, group.by = "cell_id"
 p12 + p22
 ggsave("../out/test_introns/plot/UMAP_before_integration_annotatation_V5.png", width = 10, height = 5)
 
+# Jaccard similarity #####################################################
+# build the matrix for the barcode assignament
+df_meta_full2_annotation <- inner_join(
+  data.list$sample_untreated_WOintron@meta.data %>%
+    rownames_to_column("barcode") %>%
+    dplyr::select(barcode,cell_id) %>%
+    mutate(seurat_clusters = paste0("WOintron_",cell_id)),
+  data.list$sample_untreated_Wintron@meta.data %>%
+    rownames_to_column("barcode") %>%
+    dplyr::select(barcode,cell_id)%>%
+    mutate(seurat_clusters = paste0("Wintron_",cell_id)),
+  suffix = c("_WOintron","_Wintron"),by = "barcode")
+
+df_meta_full2_annotation %>%
+  filter(cell_id_WOintron != cell_id_Wintron)
+
+# Jaccard score is defined as:
+# Jaccard Similarity = (number of observations in both sets) / (number in either set)
+# define the jaccard score function
+# jaccard <- function(a, b) {
+#   intersection <- length(intersect(a, b))
+#   union <- length(a) + length(b) - intersection
+#   return (intersection/union)
+# }
+# # test
+# a <- c('potato', 'tomotto', 'chips', 'baloon')
+# b <- c('car', 'chips', 'bird', 'salt')
+# jaccard(a, b)
+
+# build all the comparison
+# build the dataset for the correlatino plot
+df_crossing_annotation <- crossing(seurat_clusters_WOintron = unique(df_meta_full2_annotation$seurat_clusters_WOintron),
+                                   seurat_clusters_Wintron = unique(df_meta_full2_annotation$seurat_clusters_Wintron))
+
+# build the scatter plot
+df_jaccard_score_annotation <- pmap(list(WOintron = df_crossing_annotation$seurat_clusters_WOintron,
+                                         Wintron = df_crossing_annotation$seurat_clusters_Wintron), function(WOintron,Wintron){
+                                
+                                # calculate the jaccard score
+                                a <- df_meta_full2_annotation %>%
+                                  filter(seurat_clusters_WOintron == WOintron) %>% pull(barcode)
+                                b <- df_meta_full2_annotation %>%
+                                  filter(seurat_clusters_Wintron == Wintron) %>% pull(barcode)
+                                jaccard_score <- jaccard(a,b)
+                                
+                                # build a data.frame
+                                df <- data.frame(WOintron = WOintron,
+                                                 Wintron = Wintron,
+                                                 jaccard_score = jaccard_score)
+                                return(df)
+                              }) %>%
+  bind_rows()
+
+# shape it as a matrix
+mat_jaccard_score_annotation <- df_jaccard_score_annotation %>%
+  pivot_wider(names_from = Wintron,values_from = jaccard_score) %>%
+  column_to_rownames("WOintron")
+
+ht_02_annotation <- Heatmap(mat_jaccard_score_annotation,
+                 name = "Jaccard score",
+                 # col = colorRamp2(c(-1, 0, 1), colors = c("blue", "white", "red")),
+                 col = viridis::viridis(option = "turbo",n = 20,direction = -1),
+                 row_names_side = "right",
+                 row_names_gp = gpar(fontsize = 8),
+                 column_names_side = "bottom",
+                 column_names_gp = gpar(fontsize = 8),
+                 row_dend_reorder = FALSE,
+                 column_dend_reorder = FALSE,
+                 row_title_gp = gpar(fontsize = 10, fontface = "bold"),
+                 column_title_gp = gpar(fontsize = 10, fontface = "bold"),
+                 show_column_names = T,
+                 show_row_names = T)
+pdf("../out/test_introns/plot/Heatmap_Jaccard_score_before_integration_V5_annotationInverted.pdf", width = 5, height = 4)
+draw(ht_02_annotation)
+dev.off()
+
+png("../out/test_introns/plot/Heatmap_Jaccard_score_before_integration_V5_annotationInverted.png",width = 500,height = 400)
+draw(ht_02_annotation)
+dev.off()
+
+# -------------------------------------------------------------------------
 # dotplot after marker anntoation
 test_short_WOintron2 <- DotPlot(data.list$sample_untreated_WOintron, features = shortlist_features_list2, dot.scale = 8,cluster.idents = T,group.by = "cell_id") +
   RotatedAxis()+ ggtitle("Without introns")

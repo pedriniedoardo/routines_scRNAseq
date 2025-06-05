@@ -26,6 +26,9 @@ renv::install("bioc::DESeq2")
 renv::install("RNAseqQC")
 renv::install("vegan")
 
+renv::install("bioc::SingleR")
+renv::install("bioc::celldex")
+
 # -------------------------------------------------------------------------
 library(Seurat)
 library(BPCells)
