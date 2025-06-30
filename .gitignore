@@ -1,8 +1,14 @@
-.Rproj.user
+# ignore files
 .Rhistory
 .RData
 .Ruserdata
+.Rhistory
+.Rprofile
+*.Rproj
 
-# folder
+# ignore folder
 renv/
 .conda/
+.Rproj.user/
+data/
+out/
