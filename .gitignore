@@ -7,7 +7,6 @@
 *.Rproj
 
 # ignore folder
-renv/
 .conda/
 .Rproj.user/
 data/
