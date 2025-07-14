@@ -248,7 +248,8 @@ DefaultAssay(data.combined) <- "RNA"
 
 # find markers for every cluster compared to all remaining cells, report only the positive
 # ones
-sobj_total_h.markers <- RunPrestoAll(data.combined, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25)
+sobj_total_h.markers <- RunPrestoAll(data.combined, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25) %>%
+  mutate(delta.pct = pct.1 - pct.2)
 
 # save the table of all markers
 sobj_total_h.markers %>%
@@ -276,7 +277,9 @@ top_specific_markers <- sobj_total_h.markers %>%
   filter(str_detect(gene,pattern = "^RP[SL][[:digit:]]|^RPLP[[:digit:]]|^RPSA",negate=T)) %>%
   filter(str_detect(gene,pattern = "^HB[^(P)]",negate=T)) %>%
   group_by(cluster) %>%
-  top_n(3, avg_log2FC)
+  # top_n(3, delta.pct)
+  # rank using the same critorion present in the methods
+  slice_head(n = 3)
 
 # And generate e.g. a dotplot:
 dittoSeq::dittoDotPlot(data.combined,
