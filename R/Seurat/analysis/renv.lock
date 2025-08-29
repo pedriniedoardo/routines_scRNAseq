@@ -6208,6 +6208,26 @@
       "Repository": "RSPM",
       "Encoding": "UTF-8"
     },
+    "dichromat": {
+      "Package": "dichromat",
+      "Version": "2.0-0.1",
+      "Source": "Repository",
+      "Date": "2013-01-23",
+      "Title": "Color Schemes for Dichromats",
+      "Authors@R": "c(person(given = \"Thomas\", family = \"Lumley\", role = c(\"aut\", \"cre\"), email = \"tlumley@u.washington.edu\"), person(given = \"Ken\", family = \"Knoblauch\", role = \"ctb\", email = \"ken.knoblauch@inserm.fr\"), person(given = \"Scott\", family = \"Waichler\", role = \"ctb\", email = \"scott.waichler@pnl.gov\"), person(given = \"Achim\", family = \"Zeileis\", role = \"ctb\", email = \"Achim.Zeileis@R-project.org\"))",
+      "Description": "Collapse red-green or green-blue distinctions to simulate the effects of different types of color-blindness.",
+      "Depends": [
+        "R (>= 2.10)",
+        "stats"
+      ],
+      "License": "GPL-2",
+      "LazyLoad": "Yes",
+      "Author": "Thomas Lumley [aut, cre], Ken Knoblauch [ctb], Scott Waichler [ctb], Achim Zeileis [ctb]",
+      "Maintainer": "Thomas Lumley <tlumley@u.washington.edu>",
+      "Repository": "https://packagemanager.posit.co/cran/__linux__/jammy/latest",
+      "NeedsCompilation": "no",
+      "Encoding": "UTF-8"
+    },
     "digest": {
       "Package": "digest",
       "Version": "0.6.34",
@@ -8556,6 +8576,39 @@
       "Maintainer": "Kirill M<U+00FC>ller <kirill@cynkra.com>",
       "Repository": "https://packagemanager.posit.co/cran/__linux__/jammy/latest"
     },
+    "homologene": {
+      "Package": "homologene",
+      "Version": "1.4.68.19.3.27",
+      "Source": "Repository",
+      "Type": "Package",
+      "Title": "Quick Access to Homologene and Gene Annotation Updates",
+      "Depends": [
+        "R (>= 3.1.2)"
+      ],
+      "Imports": [
+        "dplyr (>= 0.7.4)",
+        "magrittr (>= 1.5)",
+        "purrr (>= 0.2.5)",
+        "readr (>= 1.3.1)",
+        "R.utils(>= 2.8.0)"
+      ],
+      "Suggests": [
+        "testthat (>= 1.0.2)"
+      ],
+      "Date": "2019-03-28",
+      "Authors@R": "c( person(\"Ogan\", \"Mancarci\", email = \"ogan.mancarci@gmail.com\", role = c(\"aut\", \"cre\")), person(\"Leon\",\"French\", role = c('ctb')))",
+      "BugReports": "https://github.com/oganm/homologene/issues",
+      "URL": "https://github.com/oganm/homologene",
+      "Description": "A wrapper for the homologene database by the National Center for Biotechnology Information ('NCBI'). It allows searching for gene homologs across  species. Data in this package can be found at <ftp://ftp.ncbi.nih.gov/pub/HomoloGene/build68/>. The package also includes an updated version of the homologene database where  gene identifiers and symbols are replaced with their latest (at the time of submission) version and functions to fetch latest annotation data to keep updated.",
+      "License": "MIT + file LICENSE",
+      "LazyData": "true",
+      "RoxygenNote": "6.1.1",
+      "NeedsCompilation": "no",
+      "Author": "Ogan Mancarci [aut, cre], Leon French [ctb]",
+      "Maintainer": "Ogan Mancarci <ogan.mancarci@gmail.com>",
+      "Repository": "https://packagemanager.posit.co/cran/__linux__/jammy/latest",
+      "Encoding": "UTF-8"
+    },
     "htmlTable": {
       "Package": "htmlTable",
       "Version": "2.4.3",
@@ -9675,6 +9728,29 @@
       "Maintainer": "Lionel Henry <lionel@rstudio.com>",
       "Repository": "https://packagemanager.posit.co/cran/__linux__/jammy/latest"
     },
+    "mapproj": {
+      "Package": "mapproj",
+      "Version": "1.2.12",
+      "Source": "Repository",
+      "Title": "Map Projections",
+      "Date": "2025-05-15",
+      "Authors@R": "c(person(given=\"Doug\", family=\"McIlroy\", role=\"aut\", comment = \"Original C code\"), person(given=\"Ray\", family=\"Brownrigg\", role=c(\"trl\", \"aut\"), comment=\"R packaging\"), person(given=c(\"Thomas\", \"P.\"), family=\"Minka\", role=c(\"trl\", \"aut\"), comment=\"R packaging\"), person(given=\"Roger\", family=\"Bivand\", role=\"ctb\", comment=\"transition to Plan 9 code base\"), person(given=\"Alex\", family=\"Deckmyn\", role=c(\"ctb\", \"cre\"), email=\"alex.deckmyn@meteo.be\"))",
+      "Description": "Converts latitude/longitude into projected coordinates.",
+      "Depends": [
+        "R (>= 3.0.0)",
+        "maps (>= 2.3-0)"
+      ],
+      "Imports": [
+        "stats",
+        "graphics"
+      ],
+      "License": "Lucent Public License",
+      "NeedsCompilation": "yes",
+      "Author": "Doug McIlroy [aut] (Original C code), Ray Brownrigg [trl, aut] (R packaging), Thomas P. Minka [trl, aut] (R packaging), Roger Bivand [ctb] (transition to Plan 9 code base), Alex Deckmyn [ctb, cre]",
+      "Maintainer": "Alex Deckmyn <alex.deckmyn@meteo.be>",
+      "Repository": "https://packagemanager.posit.co/cran/__linux__/jammy/latest",
+      "Encoding": "UTF-8"
+    },
     "maps": {
       "Package": "maps",
       "Version": "3.4.2",
@@ -10319,6 +10395,48 @@
       "Author": "Philipp Schauberger [aut], Alexander Walker [aut], Luca Braglia [ctb], Joshua Sturm [ctb], Jan Marvin Garbuszus [ctb, cre], Jordan Mark Barbone [ctb] (<https://orcid.org/0000-0001-9788-3628>), David Zimmermann [ctb], Reinhold Kainhofer [ctb]",
       "Maintainer": "Jan Marvin Garbuszus <jan.garbuszus@ruhr-uni-bochum.de>",
       "Repository": "RSPM"
+    },
+    "pals": {
+      "Package": "pals",
+      "Version": "1.10",
+      "Source": "Repository",
+      "Title": "Color Palettes, Colormaps, and Tools to Evaluate Them",
+      "Authors@R": "person(\"Kevin\", \"Wright\", , \"kw.stat@gmail.com\", role = c(\"aut\", \"cre\", \"cph\"), comment = c(ORCID = \"0000-0002-0617-8673\"))",
+      "Description": "A comprehensive collection of color palettes, colormaps, and tools to evaluate them. See Kovesi (2015) <doi:10.48550/arXiv.1509.03700>.",
+      "License": "MIT + file LICENSE",
+      "URL": "https://kwstat.github.io/pals/",
+      "BugReports": "https://github.com/kwstat/pals/issues",
+      "Depends": [
+        "R (>= 4.1.0)"
+      ],
+      "Imports": [
+        "colorspace",
+        "dichromat",
+        "graphics",
+        "grDevices",
+        "mapproj",
+        "maps",
+        "methods",
+        "stats"
+      ],
+      "Suggests": [
+        "classInt",
+        "ggplot2",
+        "knitr",
+        "latticeExtra",
+        "reshape2",
+        "rgl",
+        "rmarkdown",
+        "testthat"
+      ],
+      "VignetteBuilder": "knitr",
+      "Encoding": "UTF-8",
+      "Language": "en-US",
+      "RoxygenNote": "7.3.2",
+      "NeedsCompilation": "no",
+      "Author": "Kevin Wright [aut, cre, cph] (<https://orcid.org/0000-0002-0617-8673>)",
+      "Maintainer": "Kevin Wright <kw.stat@gmail.com>",
+      "Repository": "https://packagemanager.posit.co/cran/__linux__/jammy/latest"
     },
     "parallelly": {
       "Package": "parallelly",
