@@ -19,6 +19,7 @@ library(magick)
 library(homologene)
 library(SeuratWrappers)
 library(presto)
+library(GGally)
 
 # specify the version of Seurat Assay -------------------------------------
 # set seurat compatible with seurat4 workflow
@@ -56,6 +57,12 @@ df_exp <- FetchData(data.combined, vars = GOI,layer = "data") |>
   # separate(barcodes,into = c("barcode","barcode_id"),sep = "-",remove = F)
 
 head(df_exp)
+
+exp_sc_wide <- df_exp %>%
+  select(barcodes,gene,count_fix) %>%
+  pivot_wider(names_from = gene,values_from = count_fix)
+
+ggpairs(exp_sc_wide[,-1]) + theme_bw()
 
 # average expression
 # build the grouping variable
