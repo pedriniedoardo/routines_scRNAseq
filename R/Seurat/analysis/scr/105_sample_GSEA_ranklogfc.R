@@ -27,6 +27,8 @@ results <- lapply(paste0("../out/table/",file),function(x){
 list_ranks <- lapply(results, function(x){
   
   x <- dplyr::filter(x,!is.na(gene)) %>%
+    # make sure to remove the genes that do not have a reliable estimate of the p value
+    dplyr::filter(!is.na(pvalue)) %>%
     # average logFC in case of duplicated genenames
     group_by(gene) %>%
     summarise(logFC = mean(avg_log2FC))
