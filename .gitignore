@@ -5,6 +5,7 @@
 .Rhistory
 .Rprofile
 *.Rproj
+ckpt.tar.gz
 
 # ignore folder
 .conda/
