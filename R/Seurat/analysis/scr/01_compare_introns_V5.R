@@ -583,3 +583,33 @@ df_gene_comparison %>%
        y = "number of marker gene")+
   scale_fill_manual(values = c("magenta","blue","red"))
 ggsave("../out/test_introns/plot/BarplotCommon_marker_genes_before_integration_annotation_V5.pdf",width = 10,height = 5)
+
+# check the reson behind the WOintron only
+Idents(data.list$sample_untreated_WOintron) <- "cell_id"
+sobj_total_h.markers_WOintron2 <- RunPrestoAll(data.list$sample_untreated_WOintron, only.pos = TRUE, min.pct = 0.05, logfc.threshold = 0)
+Idents(data.list$sample_untreated_Wintron) <- "cell_id"
+sobj_total_h.markers_Wintron2 <- RunPrestoAll(data.list$sample_untreated_Wintron, only.pos = TRUE, min.pct = 0.05, logfc.threshold = 0)
+
+
+GOI_WOintron <- lapply(cell_id, function(x){
+  gene_WOintron <- sobj_total_h.markers_WOintron %>%
+    filter(cluster %in% x) %>%
+    pull(gene)
+  
+  gene_Wintron <- sobj_total_h.markers_Wintron %>%
+    filter(cluster %in% x) %>%
+    pull(gene)
+  
+  df <- data.frame(gene = setdiff(gene_WOintron,gene_Wintron),
+                   cluster = x) %>%
+    left_join(sobj_total_h.markers_Wintron2 %>% select(gene,cluster,avg_log2FC,p_val_adj),by = c("gene","cluster")) %>%
+    left_join(sobj_total_h.markers_WOintron2 %>% select(gene,cluster,avg_log2FC,p_val_adj),by = c("gene","cluster"),suffix=c(".Wintron",".WOintron"))
+  
+}) %>%
+  bind_rows()
+
+GOI_WOintron %>%
+  ggplot(aes(x=avg_log2FC.Wintron,y=avg_log2FC.WOintron)) + geom_point() + facet_wrap(~cluster)
+
+GOI_WOintron %>%
+  ggplot(aes(x=p_val_adj.Wintron,y=p_val_adj.WOintron)) + geom_point() + facet_wrap(~cluster)
