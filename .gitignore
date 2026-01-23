@@ -6,9 +6,12 @@
 .Rprofile
 *.Rproj
 ckpt.tar.gz
+repeat_mask_GRCh38.gtf
 
 # ignore folder
 .conda/
 .Rproj.user/
 data/
 out/
+out_cellranger/
+fastq/

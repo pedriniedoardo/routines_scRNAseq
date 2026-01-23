@@ -1,0 +1,28 @@
+name: env_velocyto
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  # Core Python (Documentation requires >=3.6)
+  - python=3.9
+  - pip
+
+  # Conda Dependencies (Explicitly requested by documentation)
+  - numpy
+  - scipy
+  - cython
+  - numba
+  - matplotlib
+  - scikit-learn
+  - h5py
+  - click
+
+  # recommended
+  - samtools
+  - R
+  - rpy2
+  
+  # Pip Dependencies (Documentation Warning: preferable to install pysam through PyPI)
+  - pip:
+    - pysam
+    - velocyto
