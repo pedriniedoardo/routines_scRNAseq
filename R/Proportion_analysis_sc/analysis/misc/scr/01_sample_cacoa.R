@@ -13,7 +13,7 @@ library(psych)
 
 # build the cacoa object from seurat --------------------------------------
 # load the seurat object
-so <- readRDS("../../out/object/data.combined_harmonySkipIntegration_AllSoupX_00500_07000_05_AnnotationSCType.rds")
+so <- readRDS("../../data/data.combined_harmonySkipIntegration_AllSoupX_00500_07000_05_AnnotationSCType_manualAnnotation.rds")
 DimPlot(so,label = T,group.by = "RNA_snn_res.0.1",raster=T)
 
 # wrangling ---------------------------------------------------------------
@@ -58,7 +58,8 @@ cao <- Cacoa$new(so,
                  ref.level=ref.level,
                  target.level=target.level,
                  embedding = embedding,
-                 graph.name=graph.name)
+                 graph.name=graph.name,
+                 data.slot = "data")
 
 # run cacoa ---------------------------------------------------------------
 
