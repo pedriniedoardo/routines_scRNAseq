@@ -71,7 +71,10 @@ names(data.combined.all@assays$RNA@layers)
 sobj_total <- CreateSeuratObject(counts = data.combined.all@assays$RNA$counts,
                                  project = "test_V5",
                                  meta.data = data.combined.all@meta.data,
-                                 min.cells = 20, min.features = 200) %>%
+                                 # remove the low expressing genes
+                                 min.cells = 20,
+                                 # keep all the cells in this case, the filtering has already been performed
+                                 min.features = 0) %>%
   # this is needed as the cell cycle scoring is done on the data slot, which would be empty
   Seurat::NormalizeData(verbose = T)
 
@@ -96,7 +99,7 @@ sobj_total <- CellCycleScoring(sobj_total, s.features = s.genes, g2m.features = 
 sobj_total$percent.mt.integration <- PercentageFeatureSet(sobj_total, pattern = "^MT-")
 sobj_total$percent.ribo.integration <- PercentageFeatureSet(sobj_total, pattern = "^RP[SL][[:digit:]]|^RPLP[[:digit:]]|^RPSA")
 # add also the percentage of globin. in this dataset it is not meaningful as there is no blood
-sobj_total$percent.globin.integration <- Seurat::PercentageFeatureSet(sobj_total,pattern = "^Hb[^(p)]")
+sobj_total$percent.globin.integration <- Seurat::PercentageFeatureSet(sobj_total,pattern = "^HB[^(P)]")
 
 
 # if needed integrate some new metadata at this point ---------------------

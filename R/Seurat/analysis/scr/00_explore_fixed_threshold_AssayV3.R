@@ -31,7 +31,12 @@ list_datasc <- lapply(id_sample,function(x){
   # crete the object
   datasc <- CreateSeuratObject(counts = data, project = LUT %>%
                                  filter(sample == x) %>%
-                                 pull(sample), min.cells = 20, min.features = 200)
+                                 pull(sample),
+                               # remove low expressed features
+                               # in this case keep all the features before the integration
+                               min.cells = 0,
+                               # remove low content barcodes
+                               min.features = 200)
   
   # add the metadata
   datasc$percent.mt <- PercentageFeatureSet(datasc, pattern = "^MT-")

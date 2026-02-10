@@ -50,7 +50,10 @@ lapply(data.list,function(x){
 sobj_total <- CreateSeuratObject(counts = data.combined.all@assays$RNA@counts,
                                  project = "test_V5",
                                  meta.data = data.combined.all@meta.data,
-                                 min.cells = 20, min.features = 200) %>%
+                                 # remove the low expressing genes
+                                 min.cells = 20,
+                                 # keep all the cells in this case, the filtering has already been performed
+                                 min.features = 0) %>%
   # NOTICE: If I normalize before the cell cycle assignament I obtain a different call for the cell cycle identity.
   Seurat::NormalizeData(verbose = T)
 
