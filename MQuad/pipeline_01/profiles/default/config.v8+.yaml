@@ -1,0 +1,38 @@
+# Instructions here: https://snakemake.readthedocs.io/en/stable/executing/cli.html
+executor: local
+jobs: 30
+conda-prefix: .snakemake/conda
+rerun-incomplete: true
+keep-going: true
+latency-wait: 60
+
+# No wall time information given. This might or might not work on your cluster. If not, specify the resource runtime in your rule or as a reasonable default via --default-resources.
+# TBD
+#
+default-resources:
+    mem_mb: 5000
+    cores: 1
+
+set-threads:
+    runCellSNPLite: 20
+    runMQuad: 20
+    runVireo: 20
+    runMQuadStandalone: 20
+    runVireoStandalone: 20
+
+set-resources:
+    runCellSNPLite: 
+        mem_mb: 64000
+        mem_gb: 64
+    runMQuad: 
+        mem_mb: 64000
+        mem_gb: 64
+    runVireo: 
+        mem_mb: 64000
+        mem_gb: 64
+    runMQuadStandalone:
+        mem_mb: 64000
+        mem_gb: 64
+    runVireoStandalone:
+        mem_mb: 64000
+        mem_gb: 64
